@@ -211,7 +211,7 @@ A Factory I/O-ban megtervezett fizikai műszerfal áttekinthető, az ipari szabv
  ### 4.2. Működési Demonstráció (Videó elemzés)
 
 Az alábbi videó bemutatja a rendszer működését az AUTO és HAND üzemi állapotokban:
-https://youtu.be/oRk2wWwoCf4
+https://img.youtube.com/vi/A_VIDEOD_ID_JA/hqdefault.jpg)](https://youtu.be/oRk2wWwoCf4)
 
 * **1. AUTO (Automata üzemmód):** 
   * A választókapcsoló `II` (AUTO) állásában elindul az automatikus szortírozás.
