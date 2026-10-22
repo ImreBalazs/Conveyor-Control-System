@@ -1,6 +1,6 @@
 ## 1. Projekt áttekintése
 
-Ebben a projektben egy ipari szállítószalag- és szortírozórendszer teljes körű automatizálását valósítottam meg. A rendszer egy elektromos hajtású szállítószalagból és egy pneumatikus kitoló hengerből áll, a folyamatokat pedig optikai érzékelők vezérlik.
+A projektben egy ipari szállítószalag- és szortírozórendszer teljes körű automatizálását valósítottam meg. A rendszer egy elektromos hajtású szállítószalagból és egy pneumatikus kitoló hengerből áll, a folyamatokat pedig optikai érzékelők vezérlik.
 A berendezés célja a szalagon érkező dobozok méret szerinti automatikus válogatása és számlálása:
 * **Méret szerinti szortírozás:** A rendszer különbséget tesz az alacsony és a magas dobozok között. 
   * Ha **magas doboz** érkezik, a magasságérzékelő szenzor jelt ad, és a pneumatikus kitoló kar lelöki azt a főpályáról egy gyűjtőhelyre.
@@ -211,7 +211,9 @@ A Factory I/O-ban megtervezett fizikai műszerfal áttekinthető, az ipari szabv
  ### 4.2. Működési Demonstráció (Videó elemzés)
 
 Az alábbi videó bemutatja a rendszer működését az AUTO és HAND üzemi állapotokban:
+<video src="./conveyorControl.mp4" controls style="max-width: 100%;"></video>
 
+[**Kattints ide a videó külön oldalon történő megnyitásához**](./conveyorControl.mp4)
 
 
 
