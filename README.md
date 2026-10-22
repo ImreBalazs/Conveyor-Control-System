@@ -208,7 +208,7 @@ A Factory I/O-ban megtervezett fizikai műszerfal áttekinthető, az ipari szabv
   * **`Counter Display`:** Digitális hétszegmenses kijelző, amely az áthaladt alacsony dobozok aktuális számát mutatja (`counterCurrentValue`).
   * **`Reset Counter` (Sárga):** Nyomógomb a darabszámláló alaphelyzetbe állításához (`counterReset`).
 
- ### 4.2. Működési Demonstráció (Videó elemzés)
+ ### 4.2. Működési Demonstráció
 
 <img width="1911" height="1040" alt="{DE243260-CA78-4CCF-8229-4533B5EA822A}" src="https://github.com/user-attachments/assets/5f1a4e83-978f-440b-b825-efb272704439" />
 
