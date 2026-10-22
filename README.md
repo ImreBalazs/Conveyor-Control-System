@@ -32,9 +32,14 @@ A rendszer működése három jól elkülöníthető üzemmódra épül, amelyek
 ---
 
 ## 2. Villamos terv (EPLAN Electric P8)
-A villamos séma az **IEC 81346** szabványnak megfelelő tervjelezést használ (`-K` kontaktorok, `-Y` szelepek, `-B` érzékelők, `-S` nyomógombok). A 4. oldal tartalmazza a kézi üzemmód hardveres logikáját (öntartás, villamos reteszelés a `-K1` és `-K2` bontó érintkezőin keresztül, leállítás a sorba kötött `-S4` STOP gombbal).
+A rendszer teljes villamos kapcsolási rajza az **EPLAN Electric P8** szoftverben készült el. Ennek kiemelt része a 4. oldal, amely a kézi üzemmód (HAND) hardveres vezérlési és védelmi logikáját, valamint az üzemmódváltást mutatja be:
 
-*(Ide jön az EPLAN kép)*
+* **Relés öntartó körök:** Az indítógombok megnyomásakor a megfelelő irányú kontaktor (`-K1` az előre, `-K2` a hátra irányért) behúz, és a saját segédérintkezőjén keresztül öntartásba kerül. Ez biztosítja, hogy a gomb elengedése után is fennmaradjon a motor tápellátása.
+* **Villamos keresztreteszelés:** A fáziszárlat megakadályozása érdekében a két kontaktor vezérlőágába keresztbe vannak beépítve a másik kontaktor bontóérintkezői. Amíg a `-K1` behúzott állapotban van, a bontóérintkezője megszakítja a `-K2` tekercsének áramkörét (és fordítva), így a két forgásirány egyidejű bekapcsolása fizikailag lehetetlen.
+* **Soros leállítás:** A vezérlőáramkör elejére sorosan bekötött `-S4` STOP gomb megnyomásakor a táplálás megszakad, az öntartás azonnal kiold, és a motor leáll.
+* **Átkapcsolás Automata (AUTO) üzemmódba:** Az üzemmód-választó kapcsolóval a rendszer bármikor átváltható automata üzemmódba. Ebben az állapotban a direkt relés vezérlés helyett a folyamatirányítást a PLC veszi át, és a mozgásokat a CODESYS-ben megírt program szabályozza az optikai érzékelők jelei alapján.
+
+<img width="1237" height="782" alt="{356097BF-CA5E-42C6-B4E9-2D342912A877}" src="https://github.com/user-attachments/assets/7f7234dc-f70e-4021-a979-5b01fd47507a" />
 
 ---
 
