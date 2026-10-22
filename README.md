@@ -51,9 +51,9 @@ A teljes vezérlőszoftvert **CODESYS V3.5** környezetben, Létradiagram (**Lad
 
 Az alábbiakban a programkódot hálózatonként (Network) haladva részletezzük.
 
-#### 3.1. `S2LD` Főprogram (Változók és Főhálózatok)
+#### 3.1. `S2LD` Főprogram (Változók és Hálózatok)
 
-A főprogram a globális/belső változók kezelése mellett az automata modul meghívásáért és a kézi (HAND) üzemmód kétirányú motorvezérléséért felel.
+A főprogram felelős az üzemmód-választásért, a kézi mozgatás szoftveres reteszeléséért és az automata alprogram feltételes meghívásáért.
 
 **Változó-deklaráció (`S2LD`):**
 ```pascal
@@ -62,8 +62,17 @@ VAR
     autoMode : BOOL; // Automata üzemmód aktív állapota
     handMode : BOOL; // Kézi üzemmód aktív állapota
 END_VAR
+```
 
+---
 
+##### Network 1: Automata alprogram feltételes meghívása
+
+<img width="1355" height="122" alt="{C989974E-0639-4C6E-A289-FA23F1869582}" src="https://github.com/user-attachments/assets/7e5acd73-7d12-410b-9004-04fb2c31f471" />
+
+* **Működés:** Az üzemmód-választó kapcsoló `autoMode` (Automata) állásában a PLC aktiválja a `PRG_Automata` blokk `EN` (Enable) bemenetét, lefuttatva az alprogramot. OFF vagy HAND üzemmódban az automata ciklus inaktív marad.
+
+---
 
 ---
 ## 4. 3D Szimuláció és Működés (Factory I/O)
