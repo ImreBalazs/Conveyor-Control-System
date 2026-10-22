@@ -51,63 +51,19 @@ A teljes vezérlőszoftvert **CODESYS V3.5** környezetben, Létradiagram (**Lad
 
 Az alábbiakban a programkódot hálózatonként (Network) haladva részletezzük.
 
-#### 3.1. `S2LD` Főprogram (Változók és Hálózatok)
+#### 3.1. `S2LD` Főprogram (Üzemmód-választás és biztonsági logika)
 
-A főprogram felelős az üzemmód-választásért, a kézi mozgatás szoftveres reteszeléséért és az automata alprogram feltételes meghívásáért.
+A főprogram létradiagramja (1–5. hálózat) a rendszer globális állapotaikért, a kézi mozgatásért és az üzemmódok közötti váltásért felel.
 
-**Változó-deklaráció (`S2LD`):**
-```pascal
-PROGRAM S2LD
-VAR
-    autoMode : BOOL; // Automata üzemmód aktív állapota
-    handMode : BOOL; // Kézi üzemmód aktív állapota
-END_VAR
-```
+<img width="1564" height="640" alt="{7DCDBEDC-3AAE-4514-8973-1807DF6A95EB}" src="https://github.com/user-attachments/assets/d36fd252-ef03-4974-8409-d704580a8e9c" />
+<img width="1565" height="334" alt="{B010B7BD-DE19-4976-A164-4478670E05CF}" src="https://github.com/user-attachments/assets/6644dbfa-78e1-41fa-872e-1406ac24838a" />
 
----
+*`S2LD` létradiagram hálózatok (1–5. Network)*
 
-##### Network 1: Automata alprogram feltételes meghívása
-
-<img width="1355" height="122" alt="{C989974E-0639-4C6E-A289-FA23F1869582}" src="https://github.com/user-attachments/assets/7e5acd73-7d12-410b-9004-04fb2c31f471" />
-
-* **Működés:** Az üzemmód-választó kapcsoló `autoMode` (Automata) állásában a PLC aktiválja a `PRG_Automata` blokk `EN` (Enable) bemenetét, lefuttatva az alprogramot. OFF vagy HAND üzemmódban az automata ciklus inaktív marad.
-
----
-
-##### Network 2: Előremenetel vezérlése Kézi üzemmódban (`forwardBlock`)
-
-<img width="1565" height="266" alt="{7CBB31E1-4EDA-4974-9A7B-7D33FF13D966}" src="https://github.com/user-attachments/assets/a06d4954-f790-4240-8692-e67d646800f7" />
-
-
-* **SET (Indítási feltételek):** Az `RS` tároló (`forwardBlock`) akkor kapcsolja be az előre irányú hajtást, ha az alábbi feltételek mindegyike teljesül:
-  1. **Üzemmód:** A rendszer Kézi üzemmódban van (`handMode`).
-  2. **STOP gomb:** A STOP gomb alaphelyzetben van (`PRG_Automata.stopPB`).
-  3. **Indítás:** Megnyomják az előre indítógombot (`PRG_Automata.forwardPB`).
-  4. **Szoftveres reteszelés:** A hátramenetel nem aktív (`PRG_Automata.reverseDirection` bontóérintkező / NC), megakadályozva a két forgásirány egyidejű indítását.
-* **RESET1 (Törlési feltételek):** A tároló azonnal kiold (Reset), ha:
-  * Megnyomják a **STOP gombot** (`PRG_Automata.stopPB`), **VAGY**
-  * Kiold a **Vészleállító** (`PRG_Automata.emergencyStop`).
-* **Kimenetek (Q1):** A tároló kimenete egyidejűleg aktiválja:
-  * Az előre irányú hajtást (`PRG_Automata.forwardDirection`).
-  * A műszerfali visszajelző lámpát (`PRG_Automata.forwardLight`).
-
----
-
-##### Network 3: Hátramenetel vezérlése Kézi üzemmódban (`reverseBlock`)
-
-<img width="1579" height="266" alt="{C393F20D-988B-4FBC-A3FE-D78DA7F00D20}" src="https://github.com/user-attachments/assets/b5c11fe5-14db-4e53-b322-023f9e09c278" />
-
-
-* **SET (Indítási feltételek):** A hátra irányú `RS` tároló (`reverseBlock`) indítási feltételei:
-  1. **Üzemmód:** A rendszer Kézi üzemmódban van (`handMode`).
-  2. **STOP gomb:** A STOP gomb alaphelyzetben van (`PRG_Automata.stopPB`).
-  3. **Indítás:** Megnyomják a hátra indítógombot (`PRG_Automata.reversePB`).
-  4. **Szoftveres reteszelés:** Az előremenetel nem aktív (`PRG_Automata.forwardDirection` bontóérintkező / NC).
-* **RESET1 (Törlési feltételek):** A törlési logika megegyezik az előre iránnyal: a **STOP gomb** (`PRG_Automata.stopPB`) megnyomásakor vagy a **Vészleállító** (`PRG_Automata.emergencyStop`) kioldásakor a tároló azonnal törlődik.
-* **Kimenetek (Q1):** A tároló kimenete egyidejűleg aktiválja:
-  * A hátra irányú hajtást (`PRG_Automata.reverseDirection`).
-  * A hátrameneti visszajelző lámpát (`PRG_Automata.reverseLight`).
-
+* **Network 1 – Automata hívás:** Az `autoMode` jel jelenlétében engedélyezi és meghívja a `PRG_Automata` alprogramot.
+* **Network 2–3 – Kézi vezérlés és keresztreteszelés:** A kézi előre/hátra mozgatást `RS` tárolók végzik. A fáziszárlat elleni szoftveres védelmet a szemközti irányok bontóérintkezői (NC) biztosítják. A STOP (`stopPB`) és Vészleállító (`emergencyStop`) gombok azonnal törlik (`RESET1`) a tárolókat.
+* **Network 4 – Állapotjelzés:** Amíg a szalag sem előre, sem hátra nem mozog, a `stopLight` jelzőlámpa aktív.
+* **Network 5 – OFF / Biztonsági törlés:** OFF állásban (amikor sem `autoMode`, sem `handMode` nem él) a PLC kényszerítetten törli (`Reset coils`) az összes hajtást és beavatkozót (`forwardDirection`, `reverseDirection`, `pusher`), megelőzve a bennragadó állapotokat.
 ---
 ## 4. 3D Szimuláció és Működés (Factory I/O)
 A PLC és a szimuláció közötti adatcserét a CODESYS beépített OPC UA szervere és a Symbol Configuration-ben szűrt I/O jelek biztosítják.
