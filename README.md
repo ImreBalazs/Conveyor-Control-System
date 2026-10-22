@@ -64,6 +64,65 @@ A főprogram létradiagramja (1–5. hálózat) a rendszer globális állapotaik
 * **Network 2–3 – Kézi vezérlés és keresztreteszelés:** A kézi előre/hátra mozgatást `RS` tárolók végzik. A fáziszárlat elleni szoftveres védelmet a szemközti irányok bontóérintkezői (NC) biztosítják. A STOP (`stopPB`) és Vészleállító (`emergencyStop`) gombok azonnal törlik (`RESET1`) a tárolókat.
 * **Network 4 – Állapotjelzés:** Amíg a szalag sem előre, sem hátra nem mozog, a `stopLight` jelzőlámpa aktív.
 * **Network 5 – OFF / Biztonsági törlés:** OFF állásban (amikor sem `autoMode`, sem `handMode` nem él) a PLC kényszerítetten törli (`Reset coils`) az összes hajtást és beavatkozót (`forwardDirection`, `reverseDirection`, `pusher`), megelőzve a bennragadó állapotokat.
+
+#### 3.2. `PRG_Automata` (Automata és Szortírozási Logika)
+
+A `PRG_Automata` alprogram felelős az automatikus üzemmód felügyeletéért, a visszajelző lámpák kezeléséért, a magas dobozok pneumatikus szortírozásáért, valamint az alacsony dobozok darabszámlálásáért.
+
+<img width="1356" height="607" alt="{13A9DADC-BD7A-4D6C-947B-14AEB7D7572E}" src="https://github.com/user-attachments/assets/9a1e6a5f-52fc-4adf-bf65-a27366d5da54" />
+<img width="1345" height="743" alt="{458321D3-1F0B-4443-96A6-392F97A3B0C1}" src="https://github.com/user-attachments/assets/6571fbd5-442f-4f76-9743-2f1dea18d587" />
+<img width="1342" height="218" alt="{BB383D67-F807-4B72-9AD6-8515D6A87BB8}" src="https://github.com/user-attachments/assets/89372c71-ab19-4d08-abc1-2cd1d25da61e" />
+
+---
+
+##### Network 1: Tápellátás visszajelzés (`isPowerOKLamp`)
+* **Működés:** Feszültség jelenlétében a PLC közvetlenül aktiválja az `isPowerOKLamp` kimenetet, jelezve a vezérlőfeszültség meglétét a műszerfalon.
+
+---
+
+##### Network 2: Előremenetel és automata leállítás (`forwardBlock`)
+* **SET (Indítás):** Az előre irányú `RS` tároló elindul, ha megnyomják a `forwardPB` gombot és a hátramenetel inaktív (`NOT reverseDirection`).
+* **RESET1 (Törlés):** A szalag előremenetele azonnal leáll, ha:
+  * Megnyomják a STOP gombot (`stopPB`), **VAGY**
+  * Kiold a Vészleállító (`emergencyStop`), **VAGY**
+  * A darabszámláló eléri a beállított limitet (`counterOut`).
+* **Kimenet:** Aktiválja a hajtást (`forwardDirection`) és a műszerfali lámpát (`forwardLight`).
+
+---
+
+##### Network 3: Álló helyzet visszajelzése (`stopLight`)
+* **Működés:** Amíg sem az előre (`NOT forwardLight`), sem a hátra irány (`NOT reverseLight`) nem aktív, a PLC felkapcsolja a `stopLight` jelzőlámpát.
+
+---
+
+##### Network 4: Biztonsági kör hiba jelzése (`safetyCircuitFailedLamp`)
+* **Működés:** A vészleállító gomb megnyomásakor vagy a biztonsági kör bontásakor (`NOT emergencyStop`) aktiválódik a `safetyCircuitFailedLamp` hibaüzenet-lámpa.
+
+---
+
+##### Network 5: Hátramenetel és automata leállítás (`reverseBlock`)
+* **SET (Indítás):** A hátra irányú `RS` tároló elindul a `reversePB` gombbal, ha az előremenetel inaktív (`NOT forwardDirection`).
+* **RESET1 (Törlés):** Megegyezik az 2. hálózattal – a STOP gomb (`stopPB`), Vészleállító (`emergencyStop`), vagy a betelt darabszámláló (`counterOut`) azonnal leállítja a hajtást.
+* **Kimenet:** Aktiválja a hátra hajtást (`reverseDirection`) és a visszajelzőt (`reverseLight`).
+
+---
+
+##### Network 6: Pneumatikus kitoló henger vezérlése és időzítése (`pusher`)
+* **Érzékelés:** Ha a szalag előre mozog (`forwardDirection`), és a belépő optikai szenzor (`presenceSensor`) a magasságérzékelővel (`heightSensor`) együtt **magas dobozt** detektál, az `rsTimer` tároló bekapcsol.
+* **Késleltetés (TON):** A `pusherTimer` időzítő **400 ms** (`T#400MS`) késleltetést indít, megvárva, amíg a doboz pontosan a kitolókar elé ér.
+* **Kitolás:** A 400 ms letelte után az `rsPusher` tároló aktiválja a pneumatikus hengert (`pusher`), amely lelöki a dobozt a főpályáról.
+* **Alaphelyzet:** Amint a henger eléri a kiadott végállást (`pusherFrontLimit`), vagy kiold az `emergencyStop`, mindkét tároló törlődik (`RESET1`), és a henger visszahúzódik.
+
+---
+
+##### Network 7: Alacsony dobozok számlálása (`smallBoxCounter`)
+* **Számlálás (CU):** A `CTU` számláló csak azokat a dobozokat regisztrálja, amelyeket a kilépő szenzor érzékel (`counterSensor`), de a magasságérzékelő inaktív maradt (`NOT heightSensor`) előremenet közben (`NOT reverseDirection`).
+* **Határérték (PV):** A beállított érték **10 darab** (`PV := 10`).
+* **Ciklusvége (Q):** A 10. alacsony doboz áthaladásakor a `counterOut` kimenet high szintre vált:
+  * Felkapcsolja a kész állapotot jelző lámpát (`counterOutLamp`).
+  * Automatikusan leállítja a szalaghajtást a 2. és 5. hálózatban.
+* **Nullázás (RESET):** A `counterReset` gombbal a számláló aktuális értéke (`counterCurrentValue`) tetszőlegesen nullázható.
+
 ---
 ## 4. 3D Szimuláció és Működés (Factory I/O)
 A PLC és a szimuláció közötti adatcserét a CODESYS beépített OPC UA szervere és a Symbol Configuration-ben szűrt I/O jelek biztosítják.
