@@ -42,13 +42,30 @@ A rendszer teljes villamos kapcsolási rajza az **EPLAN Electric P8** szoftverbe
 <p> <a href="./conveyorControlSystemElectricalDiagram.pdf"><b>A teljes villamos kapcsolási rajz megtekintése (PDF)</b></a></p>
 
 ---
-## 3. PLC Vezérlőprogram (CODESYS V3.5)
-A szoftver az `S2LD` főprogramból (Létradiagram) és a `PRG_Automata` blokkból áll. A kézi üzemmódban az elinduló irányok `RS` tárolókba kerülnek, míg OFF állásban kényszerített törlés fut le a bennragadó állapotok elkerülésére.
+### 3. PLC Vezérlőprogram (CODESYS V3.5)
 
-*(Ide jön a CODESYS kép)*
+A teljes vezérlőszoftvert **CODESYS V3.5** környezetben, Létradiagram (**Ladder Diagram / LD**) programnyelven valósítottam meg. A program struktúrája **két külön POU-ra (Program Organization Unit)** épül fel:
+
+* **`S2LD` (Főprogram):** A fő ciklus, amely az üzemmód-választásért (HAND / AUTO / OFF), a szoftveres reteszelésekért, a kézi mozgatásért és az automata alprogram feltételes meghívásáért felel.
+* **`PRG_Automata` (Automata alprogram):** Az automata folyamat logikáját tartalmazza, beleértve az optikai érzékelők jelkezelését, a pneumatikus kitoló henger időzítését és a darabszámlálást.
+
+Az alábbiakban a programkódot hálózatonként (Network) haladva részletezzük.
+
+#### 3.1. `S2LD` Főprogram (Változók és Főhálózatok)
+
+A főprogram a globális/belső változók kezelése mellett az automata modul meghívásáért és a kézi (HAND) üzemmód kétirányú motorvezérléséért felel.
+
+**Változó-deklaráció (`S2LD`):**
+```pascal
+PROGRAM S2LD
+VAR
+    autoMode : BOOL; // Automata üzemmód aktív állapota
+    handMode : BOOL; // Kézi üzemmód aktív állapota
+END_VAR
+
+
 
 ---
-
 ## 4. 3D Szimuláció és Működés (Factory I/O)
 A PLC és a szimuláció közötti adatcserét a CODESYS beépített OPC UA szervere és a Symbol Configuration-ben szűrt I/O jelek biztosítják.
 
