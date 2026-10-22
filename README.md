@@ -171,6 +171,38 @@ END_VAR
 
 ---
 ## 4. 3D Szimuláció és Működés (Factory I/O)
-A PLC és a szimuláció közötti adatcserét a CODESYS beépített OPC UA szervere és a Symbol Configuration-ben szűrt I/O jelek biztosítják.
 
-*(Ide jön a szimulációs Videó)*
+A szoftveres vezérlés és a fizikai folyamatok valós idejű validációjához a **Factory I/O** 3D szimulációs környezetet alkalmaztam mint digitális ikret (*Digital Twin*). A PLC és a szimuláció közötti alacsony késleltetésű adatcserét a CODESYS beépített **OPC UA szervere** és a *Symbol Configuration*-ben publikált I/O jelek biztosítják.
+
+### A megvalósított 3D folyamat főbb elemei:
+
+* **Mérnöki szimulációs pálya:** Egy kétirányú hajtott szállítószalagból, optikai érzékelőkből (jelenlét-, magasság- és darabszámláló szenzorok) és egy pneumatikus kitoló hengerből álló szortírozó állomás.
+* **Automatizált szortírozási logika:**
+  * **Magas dobozok:** A belépő optikai érzékelő és a magasságérzékelő egyidejű jelére a PLC azonosítja a magas dobozt, majd egy 400 ms-os pozicionálási késleltetést követően a pneumatikus hengerrel lelöki azt a gyűjtőpályára.
+  * **Alacsony dobozok:** Akadálytalanul továbbhaladnak a főpályán. A kilépő oldali optikai szenzor regisztrálja a darabszámot, és a 10. doboz áthaladásakor a PLC automatikusan leállítja a szalaghajtást.
+* **Interaktív kezelőpanel (HMI / Control Panel):** A 3D térben elhelyezett fizikai műszerfal tartalmazza az üzemmód-választó kapcsolót (HAND / AUTO / OFF), a különálló előre/hátra indítógombokat, a STOP és E-STOP gombokat, a számlálónullázót, valamint a teljes állapotjelző láppaparkot (Tápellátás OK, Irányjelzők, Álló helyzet, Számláló betelt, Biztonsági hiba).
+
+### 4.1. Műszerfal és Kezelőfelület (Control Panel)
+
+A Factory I/O-ban megtervezett fizikai műszerfal áttekinthető, az ipari szabványoknak megfelelő elrendezést követ, biztosítva a teljes körű folyamatfelügyeletet és a manuális beavatkozási lehetőséget.
+
+<img width="676" height="785" alt="{C8B05B6A-0BDA-4ADA-B324-08DE2C8A0013}" src="https://github.com/user-attachments/assets/15c83b2d-5dca-4880-a62b-0ce28de4797b" />
+*A rendszer fizikai kezelőpanelje (Factory I/O)*
+
+* **Üzemmód-választó kapcsoló (3 állású):**
+  * **`I` / HAND:** Kézi üzemmód – az indítógombokkal a szalag manuálisan mozgatható előre és hátra.
+  * **`0` / OFF:** Kikapcsolt állapot – a PLC kényszerítetten törli az összes hajtási kimenetet és belső tárolót.
+  * **`II` / AUTO:** Automata üzemmód – a `PRG_Automata` POU átveszi a szortírozás, az időzített kitolás és a darabszámlálás vezérlését.
+* **Állapot- és hibajelző lámpák:**
+  * **`POWER OK` (Kék):** A vezérlőfeszültség meglétét és az aktív üzemi állapotot jelzi (`isPowerOKLamp`).
+  * **`MOTOR TRIPPED` (Piros):** Motorvédelem kioldását vagy hajtáshibát visszajelző lámpa.
+  * **`SAFETY CIRCUIT FAILED` (Piros):** A biztonsági kör bontását, illetve a vészleállító kioldott állapotát jelzi (`safetyCircuitFailedLamp`).
+* **Kezelőgombok:**
+  * **`Forward` (Zöld):** Előremenetel indítása kézi üzemmódban (`forwardPB`).
+  * **`StopPB` (Piros):** A hajtások azonnali leállítása (`stopPB`).
+  * **`Reverse` (Kék):** Hátramenetel indítása kézi üzemmódban (`reversePB`).
+* **Vészleállító egység:**
+  * **`Emergency Stop`:** Reteszelődő gombafejű vészleállító gomb a veszélyes állapotok azonnali megszüntetésére (`emergencyStop`).
+* **Darabszámláló és kijelző:**
+  * **`Counter Display`:** Digitális hétszegmenses kijelző, amely az áthaladt alacsony dobozok aktuális számát mutatja (`counterCurrentValue`).
+  * **`Reset Counter` (Sárga):** Nyomógomb a darabszámláló alaphelyzetbe állításához (`counterReset`).
