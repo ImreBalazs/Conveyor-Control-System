@@ -207,3 +207,20 @@ A Factory I/O-ban megtervezett fizikai műszerfal áttekinthető, az ipari szabv
 * **Darabszámláló és kijelző:**
   * **`Counter Display`:** Digitális hétszegmenses kijelző, amely az áthaladt alacsony dobozok aktuális számát mutatja (`counterCurrentValue`).
   * **`Reset Counter` (Sárga):** Nyomógomb a darabszámláló alaphelyzetbe állításához (`counterReset`).
+
+ ### 4.2. Működési Demonstráció (Videó elemzés)
+
+Az alábbi videó bemutatja a rendszer működését az AUTO és HAND üzemi állapotokban:
+
+
+
+
+
+* **1. AUTO (Automata üzemmód):** 
+  * A választókapcsoló `II` (AUTO) állásában elindul az automatikus szortírozás.
+  * A belépő oldali optikai érzékelők azonosítják a magas dobozokat, amelyeket a pneumatikus kitoló henger 400 ms késleltetéssel letol a másodlagos pályára.
+  * Az alacsony dobozok akadálytalanul haladnak tovább a főpályán a számláló szenzorig.
+
+* **2. HAND (Kézi üzemmód):**
+  * A választókapcsoló `I` (HAND) állásában az automata logika inaktív.
+  * A kezelő a `Forward` (Zöld) és `Reverse` (Kék) nyomógombok segítségével manuálisan, szoftveresen reteszelt módon vezérelheti a szalag előre- és hátramenetelét.
