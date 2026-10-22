@@ -3,10 +3,32 @@ Ebben a projektben egy ipari szállítószalag- és szortírozórendszer teljes 
 
 A fejlesztés során elkészült a villamos kapcsolási rajz (EPLAN Electric P8), a PLC vezérlőprogram (CODESYS V3.5), valamint a digitális iker szimuláció (Factory I/O), amelyeket OPC UA kommunikációs felület köt össze.
 
-* **Vezérlési architektúra:** 
-  * **HAND (Kézi):** Relés öntartó és villamosan reteszelt irányváltó logika.
-  * **AUTO (Automata):** Feltételes POU-hívás (`PRG_Automata`) érzékelőalapualapú dobozszortírozáshoz.
-  * **OFF / Safety:** Kényszerített kimenet-törlés és biztonsági reteszelések.
+Vezérlési architektúra (Háromüzemmódú koncepció):
+A rendszer működése három jól elkülöníthető üzemmódra épül, amelyeket üzemmód-választó kapcsolóval és a PLC-programban definiált logikai feltételekkel vezérlünk:
+
+1. HAND (Kézi üzemmód):
+
+Célja: Egyedi beavatkozók manuális tesztelése, beállítása és karbantartása.
+
+Irányváltás és reteszelés: A szállítószalag előre/hátra mozgatása relés öntartó körökkel történik. A hardveres és szoftveres villamos reteszelés (-K1 és -K2 kontaktorok bontóérintkezői, valamint CODESYS RS tárolók) garantálja, hogy a két forgásirány egyidejűleg soha ne kapcsolhasson be.
+
+2. AUTO (Automata üzemmód):
+
+Célja: Ciklikus, emberi beavatkozás nélküli folyamatirányítás.
+
+Működése: A PLC főprogramja feltételesen hívja meg a PRG_Automata blokkot. A folyamat az optikai szenzorok jeleire támaszkodik:
+
+Jelenlét- és magasság-detektálás: Meghatározza a szalagon érkező dobozok méretkategóriáját.
+
+Aktív szortírozás: A kiválasztott dobozoknál időzítve működteti a pneumatikus kitoló hengert (-Y1).
+
+Számlálás: Inkrementális logikával regisztrálja az áthaladó és kitolt darabszámot.
+
+3. OFF / Safety (Kikapcsolt és biztonsági állapot):
+
+Kényszerített állapot-törlés (State Reset): A választókapcsoló OFF állásában a PLC ciklusa kényszerítetten törli az összes aktív kimenetet és nullázza a belső tárolókat, megakadályozva a nem kívánt bennragadó állapotokat a következő indításkor.
+
+Biztonsági reteszelés: A Vészleállító (E-Stop) kör bontásakor a rendszer azonnal feszültségmentesíti a végrehajtó elemeket és leállítja a hajtásokat.
 
 ---
 
