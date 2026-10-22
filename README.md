@@ -69,6 +69,52 @@ A főprogram létradiagramja (1–5. hálózat) a rendszer globális állapotaik
 
 A `PRG_Automata` alprogram felelős az automatikus üzemmód felügyeletéért, a visszajelző lámpák kezeléséért, a magas dobozok pneumatikus szortírozásáért, valamint az alacsony dobozok darabszámlálásáért.
 
+**Változó-deklaráció (`PRG_Automata`):**
+```pascal
+PROGRAM PRG_Automata
+VAR
+    // Kezelőelemek és nyomógombok
+    forwardPB               : BOOL;             // Előremenetel indítógomb
+    stopPB                  : BOOL;             // Stop gomb
+    reversePB               : BOOL;             // Hátramenetel indítógomb
+    emergencyStop           : BOOL;             // Vészleállító (E-Stop)
+    counterReset            : BOOL;             // Számláló nullázó gomb
+
+    // Érzékelők és végálláskapcsolók
+    presenceSensor          : BOOL;             // Belépő jelenlét-érzékelő
+    heightSensor            : BOOL;             // Magasságérzékelő (magas doboz)
+    counterSensor           : BOOL;             // Kilépő darabszámláló érzékelő
+    pusherFrontLimit        : BOOL;             // Kitoló henger kiadott végállása
+
+    // Belső tárolók, időzítők és számlálók
+    forwardBlock            : RS;               // Előre irány RS tároló
+    reverseBlock            : RS;               // Hátra irány RS tároló
+    rsTimer                 : RS;               // Kitolási időzítés indító tároló
+    rsPusher                : RS;               // Kitoló henger RS tároló
+    pusherTimer             : TON;              // Kitolási késleltetés időzítő (400 ms)
+    smallBoxCounter         : Standard.CTU;     // Alacsony dobozok számlálója
+    counterCurrentValue     : WORD;             // Számláló aktuális értéke
+    counterOut              : BOOL;             // Számláló határérték elérés állapota
+    timerSetter             : RS;               // Időzítő segédtároló
+    stopSetter              : RS;               // Stop segédtároló
+
+    // Visszajelzők és állapotlámpák
+    counterOutLamp          : BOOL;             // Betelt állapot jelzőlámpa
+    isPowerOKLamp           : BOOL;             // Tápellátás rendben lámpa
+    safetyCircuitFailedLamp : BOOL;             // Biztonsági kör hiba lámpa
+END_VAR
+
+VAR_INPUT
+    // Bemeneti paraméterek / Vezérelt kimeneti állapotok
+    forwardDirection        : BOOL;             // Előre hajtás állapota
+    forwardLight            : BOOL;             // Előre jelzőlámpa állapota
+    reverseDirection        : BOOL;             // Hátra hajtás állapota
+    reverseLight            : BOOL;             // Hátra jelzőlámpa állapota
+    pusher                  : BOOL;             // Kitoló henger kimenete
+    stopLight               : BOOL;             // Álló helyzet jelzőlámpa
+END_VAR
+```
+
 <img width="1356" height="607" alt="{13A9DADC-BD7A-4D6C-947B-14AEB7D7572E}" src="https://github.com/user-attachments/assets/9a1e6a5f-52fc-4adf-bf65-a27366d5da54" />
 <img width="1345" height="743" alt="{458321D3-1F0B-4443-96A6-392F97A3B0C1}" src="https://github.com/user-attachments/assets/6571fbd5-442f-4f76-9743-2f1dea18d587" />
 <img width="1342" height="218" alt="{BB383D67-F807-4B72-9AD6-8515D6A87BB8}" src="https://github.com/user-attachments/assets/89372c71-ab19-4d08-abc1-2cd1d25da61e" />
