@@ -74,6 +74,40 @@ END_VAR
 
 ---
 
+##### Network 2: Előremenetel vezérlése Kézi üzemmódban (`forwardBlock`)
+
+<img width="1565" height="266" alt="{7CBB31E1-4EDA-4974-9A7B-7D33FF13D966}" src="https://github.com/user-attachments/assets/a06d4954-f790-4240-8692-e67d646800f7" />
+
+
+* **SET (Indítási feltételek):** Az `RS` tároló (`forwardBlock`) akkor kapcsolja be az előre irányú hajtást, ha az alábbi feltételek mindegyike teljesül:
+  1. **Üzemmód:** A rendszer Kézi üzemmódban van (`handMode`).
+  2. **STOP gomb:** A STOP gomb alaphelyzetben van (`PRG_Automata.stopPB`).
+  3. **Indítás:** Megnyomják az előre indítógombot (`PRG_Automata.forwardPB`).
+  4. **Szoftveres reteszelés:** A hátramenetel nem aktív (`PRG_Automata.reverseDirection` bontóérintkező / NC), megakadályozva a két forgásirány egyidejű indítását.
+* **RESET1 (Törlési feltételek):** A tároló azonnal kiold (Reset), ha:
+  * Megnyomják a **STOP gombot** (`PRG_Automata.stopPB`), **VAGY**
+  * Kiold a **Vészleállító** (`PRG_Automata.emergencyStop`).
+* **Kimenetek (Q1):** A tároló kimenete egyidejűleg aktiválja:
+  * Az előre irányú hajtást (`PRG_Automata.forwardDirection`).
+  * A műszerfali visszajelző lámpát (`PRG_Automata.forwardLight`).
+
+---
+
+##### Network 3: Hátramenetel vezérlése Kézi üzemmódban (`reverseBlock`)
+
+<img width="1579" height="266" alt="{C393F20D-988B-4FBC-A3FE-D78DA7F00D20}" src="https://github.com/user-attachments/assets/b5c11fe5-14db-4e53-b322-023f9e09c278" />
+
+
+* **SET (Indítási feltételek):** A hátra irányú `RS` tároló (`reverseBlock`) indítási feltételei:
+  1. **Üzemmód:** A rendszer Kézi üzemmódban van (`handMode`).
+  2. **STOP gomb:** A STOP gomb alaphelyzetben van (`PRG_Automata.stopPB`).
+  3. **Indítás:** Megnyomják a hátra indítógombot (`PRG_Automata.reversePB`).
+  4. **Szoftveres reteszelés:** Az előremenetel nem aktív (`PRG_Automata.forwardDirection` bontóérintkező / NC).
+* **RESET1 (Törlési feltételek):** A törlési logika megegyezik az előre iránnyal: a **STOP gomb** (`PRG_Automata.stopPB`) megnyomásakor vagy a **Vészleállító** (`PRG_Automata.emergencyStop`) kioldásakor a tároló azonnal törlődik.
+* **Kimenetek (Q1):** A tároló kimenete egyidejűleg aktiválja:
+  * A hátra irányú hajtást (`PRG_Automata.reverseDirection`).
+  * A hátrameneti visszajelző lámpát (`PRG_Automata.reverseLight`).
+
 ---
 ## 4. 3D Szimuláció és Működés (Factory I/O)
 A PLC és a szimuláció közötti adatcserét a CODESYS beépített OPC UA szervere és a Symbol Configuration-ben szűrt I/O jelek biztosítják.
