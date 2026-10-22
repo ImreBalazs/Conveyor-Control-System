@@ -211,12 +211,7 @@ A Factory I/O-ban megtervezett fizikai műszerfal áttekinthető, az ipari szabv
  ### 4.2. Működési Demonstráció (Videó elemzés)
 
 Az alábbi videó bemutatja a rendszer működését az AUTO és HAND üzemi állapotokban:
-<video src="./conveyorControl.mp4" controls style="max-width: 100%;"></video>
-
-[**Kattints ide a videó külön oldalon történő megnyitásához**](./conveyorControl.mp4)
-
-
-
+[![Kattints ide a videó megtekintéséhez](./assets/factory_io_panel.png)](./conveyorControl.mp4)
 
 * **1. AUTO (Automata üzemmód):** 
   * A választókapcsoló `II` (AUTO) állásában elindul az automatikus szortírozás.
