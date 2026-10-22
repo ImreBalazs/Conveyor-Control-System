@@ -39,7 +39,7 @@ A rendszer teljes villamos kapcsolási rajza az **EPLAN Electric P8** szoftverbe
 * **Soros leállítás:** A vezérlőáramkör elejére sorosan bekötött `-S4` STOP gomb megnyomásakor a táplálás megszakad, az öntartás azonnal kiold, és a motor leáll.
 * **Átkapcsolás Automata (AUTO) üzemmódba:** Az üzemmód-választó kapcsolóval a rendszer bármikor átváltható automata üzemmódba. Ebben az állapotban a direkt relés vezérlés helyett a folyamatirányítást a PLC veszi át, és a mozgásokat a CODESYS-ben megírt program szabályozza az optikai érzékelők jelei alapján.
 <img width="1239" height="779" alt="{646A23E2-210F-464D-AC1D-F51A5C04ACA7}" src="https://github.com/user-attachments/assets/70e57e85-13bf-4055-b3ba-1fc0c533e337" />
-📄 [**A teljes villamos kapcsolási rajz megtekintése (PDF)**](./conveyorControlSystemElectricalDiagram.pdf)
+<p> <a href="./conveyorControlSystemElectricalDiagram.pdf"><b>A teljes villamos kapcsolási rajz megtekintése (PDF)</b></a></p>
 
 ---
 ## 3. PLC Vezérlőprogram (CODESYS V3.5)
