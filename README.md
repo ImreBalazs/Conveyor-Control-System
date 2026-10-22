@@ -187,6 +187,7 @@ A szoftveres vezérlés és a fizikai folyamatok valós idejű validációjához
 A Factory I/O-ban megtervezett fizikai műszerfal áttekinthető, az ipari szabványoknak megfelelő elrendezést követ, biztosítva a teljes körű folyamatfelügyeletet és a manuális beavatkozási lehetőséget.
 
 <img width="676" height="785" alt="{C8B05B6A-0BDA-4ADA-B324-08DE2C8A0013}" src="https://github.com/user-attachments/assets/15c83b2d-5dca-4880-a62b-0ce28de4797b" />
+
 *A rendszer fizikai kezelőpanelje (Factory I/O)*
 
 * **Üzemmód-választó kapcsoló (3 állású):**
