@@ -170,3 +170,70 @@ END_VAR
   * Turns on the target-reached indicator lamp (`counterOutLamp`).
   * Automatically halts conveyor motion in Networks 2 and 5.
 - **Reset (RESET):** The current counter value (`counterCurrentValue`) can be reset at any time using the `counterReset` pushbutton.
+
+### 3.3. Embedded WebVisu HMI Visualization
+
+<img width="612" height="795" alt="{58C7DDD3-4B36-4F23-8CEC-CB332B2E02F6}" src="https://github.com/user-attachments/assets/3506ff18-4f1d-407d-91cf-51d849913c2f" />
+
+Thanks to the CODESYS **WebVisu** module, the PLC program directly hosts a browser-accessible HMI interface for remote supervision and manual override:
+
+- **Control Elements:** Rotary switch for AUTO/HAND mode selection, manual control pushbuttons (FORWARD, REVERSE), STOP, Emergency Stop (EMERGENCY STOP), and counter reset (RESET).
+- **Real-Time Status Diagnostics:** Indicator lamps wired directly to PLC I/O points showing drive states (Motor Forward/Stopped/Reverse), pneumatic pusher state (Pusher), and photocells (Presence, Height, Counter Sensor).
+- **Digital Part Counter:** Green-on-black display directly displaying the value of the PLC counter variable (`counterCurrentValue`).
+
+---
+
+## 4. 3D Simulation and Operation (Factory I/O)
+
+To achieve real-time validation of software control and physical processes, I used the **Factory I/O** 3D simulation environment as a digital twin (*Digital Twin*).
+Virtual commissioning of the system relies on real-time **OPC UA** communication between **CODESYS V3.5** and **Factory I/O**. In this architecture, the CODESYS Runtime acts as an OPC UA server, while Factory I/O connects to it as a client. This standard industrial data exchange protocol provides low-latency, bidirectional synchronization of physical sensor and actuator signals between the digital twin (3D model) and the control logic running in the PLC.
+
+### Key Elements of the Implemented 3D Process:
+
+- **Engineering Simulation Line:** A sorting station consisting of a bidirectional driven conveyor belt, optical sensors (presence, height, and part counter sensors), and a pneumatic pusher cylinder.
+- **Automated Sorting Logic:**
+  * **Tall Boxes:** Upon simultaneous signals from the entry optical sensor and the height sensor, the PLC identifies a tall box, and following a 400 ms positioning delay, ejects it onto the collection lane via the pneumatic cylinder.
+  * **Low Boxes:** Pass unimpeded along the main line. The exit optical sensor registers the box count, and after the passage of the 10th box, the PLC automatically halts conveyor motion.
+- **Interactive Control Panel (HMI / Control Panel):** The physical dashboard located in the 3D environment includes the mode selector switch (HAND / AUTO / OFF), separate forward/reverse start pushbuttons, STOP and E-STOP pushbuttons, counter reset, and a status indicator lamp bank (Power OK, Direction Indicators, Stopped, Counter Full, Safety Fault).
+
+### 4.1. Dashboard & Control Panel
+
+The physical control panel designed in Factory I/O follows a clear layout compliant with industrial standards, ensuring comprehensive process supervision and manual intervention capability.
+
+<img width="676" height="785" alt="{C8B05B6A-0BDA-4ADA-B324-08DE2C8A0013}" src="https://github.com/user-attachments/assets/15c83b2d-5dca-4880-a62b-0ce28de4797b" />
+
+*Physical control panel of the system (Factory I/O)*
+
+- **Mode Selector Switch (3-position):**
+  * **`I` / HAND:** Manual mode – the conveyor can be driven manually forward and reverse using the start pushbuttons.
+  * **`0` / OFF:** Off state – the PLC forcibly resets all drive outputs and internal latches.
+  * **`II` / AUTO:** Automatic mode – the `PRG_Automata` POU assumes control of sorting, timed ejection, and part counting.
+- **Status and Fault Indicator Lamps:**
+  * **`POWER OK` (Blue):** Indicates presence of control power and active operating status (`isPowerOKLamp`).
+  * **`MOTOR TRIPPED` (Red):** Indicator lamp signaling motor protection trip or drive fault.
+  * **`SAFETY CIRCUIT FAILED` (Red):** Indicates safety circuit interruption or tripped Emergency Stop status (`safetyCircuitFailedLamp`).
+- **Control Pushbuttons:**
+  * **`Forward` (Green):** Starts forward motion in manual mode (`forwardPB`).
+  * **`StopPB` (Red):** Immediate halt of drives (`stopPB`).
+  * **`Reverse` (Blue):** Starts reverse motion in manual mode (`reversePB`).
+- **Emergency Stop Unit:**
+  * **`Emergency Stop`:** Latching mushroom-head emergency stop pushbutton for immediate elimination of hazardous states (`emergencyStop`).
+- **Part Counter and Display:**
+  * **`Counter Display`:** Digital seven-segment display showing the current count of passed low boxes (`counterCurrentValue`).
+  * **`Reset Counter` (Yellow):** Pushbutton for resetting the part counter (`counterReset`).
+
+### 4.2. Operational Demonstration
+
+<img width="1911" height="1040" alt="{DE243260-CA78-4CCF-8229-4533B5EA822A}" src="https://github.com/user-attachments/assets/5f1a4e83-978f-440b-b825-efb272704439" />
+
+The video below demonstrates system operation in AUTO and HAND operating states:
+https://youtu.be/oRk2wWwoCf4
+
+- **1. AUTO (Automatic Mode):** 
+  * Automatic sorting starts when the selector switch is set to `II` (AUTO).
+  * Entry optical sensors identify tall boxes, which are diverted onto the secondary line by the pneumatic pusher cylinder after a 400 ms delay.
+  * Low boxes pass unimpeded along the main line to the counter sensor.
+
+- **2. HAND (Manual Mode):**
+  * When the selector switch is in the `I` (HAND) position, automatic logic is inactive.
+  * The operator can manually control forward and reverse conveyor motion in a software-interlocked manner using the `Forward` (Green) and `Reverse` (Blue) pushbuttons.
