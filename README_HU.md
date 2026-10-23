@@ -1,3 +1,5 @@
+[🇬🇧 For English version click here](./README.md)
+
 ## 1. Projekt áttekintése
 
 A projektben egy ipari szállítószalag- és szortírozórendszer teljes körű automatizálását valósítottam meg. A rendszer egy elektromos hajtású szállítószalagból és egy pneumatikus kitoló hengerből áll, a folyamatokat pedig optikai érzékelők vezérlik.
