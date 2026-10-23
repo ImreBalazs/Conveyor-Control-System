@@ -8,7 +8,7 @@ A berendezés célja a szalagon érkező dobozok méret szerinti automatikus vá
 * **Darabszámlálás és biztonsági leállítás:** Egy optikai számlálószenzor regisztrálja a folyamaton áthaladó dobozokat. Amint a számláló eléri a **10 darabot**, a rendszer automatikusan leállítja a ciklust.
 * **Irányváltás:** A szállítószalag motorja rugalmasan vezérelhető – mind **előre**, mind **hátra** irányba indítható.
 
-A fejlesztés során elkészült a villamos kapcsolási rajz (EPLAN Electric P8), a PLC vezérlőprogram (CODESYS V3.5), valamint a digitális iker szimuláció (Factory I/O), amelyeket OPC UA kommunikációs felület köt össze.
+A fejlesztés során elkészült a villamos kapcsolási rajz (EPLAN Electric P8), a PLC vezérlőprogram (CODESYS V3.5), a beépített HMI kezelőfelület (CODESYS WebVisu), valamint a digitális iker szimuláció (Factory I/O), amelyeket OPC UA kommunikációs felület köt össze.
 
 ### Vezérlési architektúra (Háromüzemmódú koncepció)
 
@@ -181,7 +181,8 @@ A CODESYS **WebVisu** moduljának köszönhetően a PLC program közvetlenül sz
 ---
 ## 4. 3D Szimuláció és Működés (Factory I/O)
 
-A szoftveres vezérlés és a fizikai folyamatok valós idejű validációjához a **Factory I/O** 3D szimulációs környezetet alkalmaztam mint digitális ikret (*Digital Twin*). A PLC és a szimuláció közötti alacsony késleltetésű adatcserét a CODESYS beépített **OPC UA szervere** és a *Symbol Configuration*-ben publikált I/O jelek biztosítják.
+A szoftveres vezérlés és a fizikai folyamatok valós idejű validációjához a **Factory I/O** 3D szimulációs környezetet alkalmaztam mint digitális ikret (*Digital Twin*).
+A rendszer virtuális üzembe helyezése (Virtual Commissioning) a **CODESYS V3.5** és a **Factory I/O** közötti valós idejű **OPC UA** kommunikáción alapul. Ebben az architektúrában a CODESYS futtatókörnyezet (Runtime) működik OPC UA szerverként, míg a Factory I/O kliensként csatlakozik hozzá. Ez a szabványos ipari adatcsere-protokoll biztosítja a digitális iker (3D modell) fizikai szenzor- és aktúátorjeleinek kétirányú, alacsony késleltetésű szinkronizációját a PLC-ben futó vezérlőlogikával.
 
 ### A megvalósított 3D folyamat főbb elemei:
 
