@@ -190,7 +190,7 @@ A rendszer virtuális üzembe helyezése (Virtual Commissioning) a **CODESYS V3.
 * **Automatizált szortírozási logika:**
   * **Magas dobozok:** A belépő optikai érzékelő és a magasságérzékelő egyidejű jelére a PLC azonosítja a magas dobozt, majd egy 400 ms-os pozicionálási késleltetést követően a pneumatikus hengerrel lelöki azt a gyűjtőpályára.
   * **Alacsony dobozok:** Akadálytalanul továbbhaladnak a főpályán. A kilépő oldali optikai szenzor regisztrálja a darabszámot, és a 10. doboz áthaladásakor a PLC automatikusan leállítja a szalaghajtást.
-* **Interaktív kezelőpanel (HMI / Control Panel):** A 3D térben elhelyezett fizikai műszerfal tartalmazza az üzemmód-választó kapcsolót (HAND / AUTO / OFF), a különálló előre/hátra indítógombokat, a STOP és E-STOP gombokat, a számlálónullázót, valamint a teljes állapotjelző láppaparkot (Tápellátás OK, Irányjelzők, Álló helyzet, Számláló betelt, Biztonsági hiba).
+- **Interaktív kezelőpanel (HMI / Control Panel):** A 3D térben elhelyezett fizikai műszerfal tartalmazza az üzemmód-választó kapcsolót (HAND / AUTO / OFF), a különálló előre/hátra indítógombokat, a STOP és E-STOP gombokat, a számlálónullázót, valamint az állapotjelző lámpasort (Tápellátás OK, Irányjelzők, Álló helyzet, Számláló betelt, Biztonsági hiba).
 
 ### 4.1. Műszerfal és Kezelőfelület (Control Panel)
 
