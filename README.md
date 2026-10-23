@@ -106,6 +106,7 @@ VAR
     safetyCircuitFailedLamp : BOOL;             // Safety circuit fault lamp
 END_VAR
 
+
 VAR_INPUT
     // Input parameters / Controlled output states
     forwardDirection        : BOOL;             // Forward drive state
@@ -115,6 +116,7 @@ VAR_INPUT
     pusher                  : BOOL;             // Pneumatic pusher cylinder output
     stopLight               : BOOL;             // Stopped status indicator lamp
 END_VAR
+```
 
 <img width="1356" height="607" alt="{13A9DADC-BD7A-4D6C-947B-14AEB7D7572E}" src="https://github.com/user-attachments/assets/9a1e6a5f-52fc-4adf-bf65-a27366d5da54" />
 <img width="1345" height="743" alt="{458321D3-1F0B-4443-96A6-392F97A3B0C1}" src="https://github.com/user-attachments/assets/6571fbd5-442f-4f76-9743-2f1dea18d587" />
