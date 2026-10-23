@@ -169,6 +169,15 @@ END_VAR
   * Automatikusan leállítja a szalaghajtást a 2. és 5. hálózatban.
 * **Nullázás (RESET):** A `counterReset` gombbal a számláló aktuális értéke (`counterCurrentValue`) tetszőlegesen nullázható.
 
+### 3.3. Beépített WebVisu HMI Vizualizáció
+
+<img width="612" height="795" alt="{58C7DDD3-4B36-4F23-8CEC-CB332B2E02F6}" src="https://github.com/user-attachments/assets/3506ff18-4f1d-407d-91cf-51d849913c2f" />
+
+A CODESYS **WebVisu** moduljának köszönhetően a PLC program közvetlenül szolgáltat egy böngészőből elérhető HMI felületet a rendszer távfelügyeletére és kézi beavatkozásra:
+
+* **Vezérlési elemek:** Forgókapcsoló az AUTO/HAND üzemmódok váltásához, kézi működtető gombok (FORWARD, REVERSE), STOP, vészleállító (EMERGENCY STOP) és számláló nullázó (RESET).
+* **Valós idejű állapotdiagnosztika:** A PLC I/O pontjaihoz közvetlenül kötött visszajelző lámpák a hajtásállapotokról (Motor Forward/Stopped/Reverse), a pneumatikus kitolóról (Pusher), valamint a fotocellákról (Presence, Height, Counter Sensor).
+* **Digitális darabszámláló:** Fekete alapon zöld kijelző, amely közvetlenül a PLC számláló változójának (`counterCurrentValue`) értékét jeleníti meg.
 ---
 ## 4. 3D Szimuláció és Működés (Factory I/O)
 
